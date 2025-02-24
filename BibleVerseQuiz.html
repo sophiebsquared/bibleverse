@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Bible Verse Should You Read Today?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #D6EAF8; /* Light blue */
+            color: #154360; /* Darker blue for contrast */
+            text-align: center;
+            padding: 20px;
+            font-size: 20px; /* Increased text size */
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            font-size: 28px; /* Bigger title */
+            color: #1B4F72;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            font-size: 22px; /* Bigger questions */
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #1B4F72; /* Dark blue */
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2E86C1;
+        }
+
+        .description {
+            display: none;
+            text-align: left;
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #AED6F1; /* Light blue */
+            border-radius: 6px;
+            font-size: 18px;
+        }
+
+        .toggle {
+            cursor: pointer;
+            color: #1B4F72;
+            text-decoration: underline;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>What Bible Verse Should You Read Today?</h1>
+        <div id="quiz"></div>
+        <button id="nextButton" onclick="nextQuestion()">Next</button>
+        <div id="results" style="display:none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "Do you often feel anxious about the future?", endings: ["When Feeling Fears and Worries..."] },
+            { text: "Do you struggle with self-doubt?", endings: ["When Feeling Fears and Worries..."] },
+            { text: "Do you experience intrusive thoughts?", endings: ["When Feeling Fears and Worries..."] },
+            { text: "Do you feel like something important is missing in your life?", endings: ["When It Feels Like Something is Missing..."] },
+            { text: "Do you worry about your or your loved ones' health?", endings: ["When Feeling Anxious About Health..."] },
+            { text: "Do you struggle with resentment towards others?", endings: ["When Judging Others..."] },
+            { text: "Do you suffer from lustful thoughts and actions?", endings: ["Overcoming Lust..."] },
+            { text: "Are you always fatigued?", endings: ["When Feeling Exhausted..."] },
+            { text: "Do you suffer from unhealthy eating habits?", endings: ["When Dealing With Unhealthy Eating Habits..."] },
+            { text: "Do you feel like you look at others with judgement?", endings: ["When Judging Others..."] },
+            { text: "Do you feel like people have always let you down?", endings: ["When Feeling Hurt..."] },
+            { text: "Do you feel broken or unwanted sometimes?", endings: ["When Feeling Hurt..."] },
+            { text: "Do you withdraw from others when you are going through difficulties?", endings: ["When Feeling Alone..."] },
+        ];
+
+        const descriptions = {
+    "When Feeling Fears and Worries...": 
+        "Matthew 6:27 - And which of you by being anxious can add a single hour to his span of life?<br><br>" +
+        "Matthew 6:34 - Therefore do not be anxious about tomorrow, for tomorrow will be anxious for itself. Sufficient for the day is its own trouble.<br><br>" +
+        "Hebrews 13:6 - So we can confidently say, The Lord is my helper; I will not fear; what can man do to me?<br><br>" +
+        "1 Peter 5:7 - Casting all your anxieties on him, because He cares for you.<br><br>" +
+        "2 Timothy 1:7 - For God gave us a spirit not of fear but of power and love and self-control.<br><br>" +
+        "Philippians 4:6-7 - Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be known to God. And the peace of God, which surpasses all understanding, will guard your hearts and your minds in Christ Jesus.",
+    
+    "When It Feels Like Something is Missing...": 
+        "Lamentations 3:24-25 - The Lord is my portion, says my soul, therefore I will hope in him. The Lord is good to those who wait for him, to the soul who seeks him.<br><br>" +
+        "Luke 11:9 - Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.<br><br>" +
+        "Proverbs 37:4 - Delight yourself in the Lord and he will give you the desires of your heart.",
+
+
+    "When Feeling Anxious About Health...": 
+        "Matthew 4:23-24 - And he went throughout all Galilee, teaching in their synagogues and proclaiming the gospel of the kingdom and healing every disease and every affliction among the people. So his fame spread throughout all Syria, and they brought him all the sick, those afflicted with various diseases and pains, those oppressed by demons, those having seizures, and paralytics, and he healed them.<br><br>" +
+        "Psalm 103:1-3 - Bless the Lord, O my soul, and all that is within me, bless his holy name! Bless the Lord, O my soul, and forget not all his benefits who forgives all your iniquity, who heals all your diseases..<br><br>" +
+        "Exodus 23:25 - You shall serve the Lord your God, and he will bless your bread and your water, and I will take sickness away from among you.",
+
+    "When Judging Others...": 
+        "John 7:24 - Do not judge by appearances, but judge with right judgment.<br><br>" +
+        "Matthew 7:1-29 - Judge not, that you be not judged. For with the judgment you pronounce you will be judged, and with the measure you use it will be measured to you. Why do you see the speck that is in your brother's eye, but do not notice the log that is in your own eye? Or how can you say to your brother, Let me take the speck out of your eye, when there is the log in your own eye? You hypocrite, first take the log out of your own eye, and then you will see clearly to take the speck out of your brother's eye.<br><br>" +
+        "Colossians 3:13 - Bear with each other and forgive one another if any of you has a grievance against someone. Forgive as the Lord forgave you.",
+
+
+    "Overcoming Lust...": 
+        "Matthew 5:28 - But I say to you that everyone who looks at a woman with lustful intent has already committed adultery with her in his heart.<br><br>" +
+        "Galatians 5:16 - But I say, walk by the Spirit, and you will not gratify the desires of the flesh.<br><br>" +
+        "1 John 2:16 - For all that is in the world—the desires of the flesh and the desires of the eyes and pride of life—is not from the Father but is from the world.",
+
+ "When Feeling Exhausted...": 
+        "Matthew 11:28-30 - Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.<br><br>" +
+        "Isaiah 40:31 - But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
+
+ "When Dealing With Unhealthy Eating Habits...": 
+        "Matthew 6:25-34 - Therefore I tell you, do not be anxious about your life, what you will eat or what you will drink, nor about your body, what you will put on. Is not life more than food, and the body more than clothing? Look at the birds of the air: they neither sow nor reap nor gather into barns, and yet your heavenly Father feeds them. Are you not of more value than they? And which of you by being anxious can add a single hour to his span of life? And why are you anxious about clothing? Consider the lilies of the field, how they grow: they neither toil nor spin, yet I tell you, even Solomon in all his glory was not arrayed like one of these. But if God so clothes the grass of the field, which today is alive and tomorrow is thrown into the oven, will he not much more clothe you, O you of little faith? Therefore do not be anxious, saying, ‘What shall we eat?’ or ‘What shall we drink?’ or ‘What shall we wear?’ For the Gentiles seek after all these things, and your heavenly Father knows that you need them all. But seek first the kingdom of God and his righteousness, and all these things will be added to you.<br><br>" +
+        "1 Corinthians 6:19-20 - Or do you not know that your body is a temple of the Holy Spirit within you, whom you have from God? You are not your own, for you were bought with a price. So glorify God in your body.",
+
+ "When Feeling Hurt...": 
+        "Psalm 34:15-18 - The eyes of the Lord are toward the righteous and his ears toward their cry. The face of the Lord is against those who do evil, to cut off the memory of them from the earth. When the righteous cry for help, the Lord hears and delivers them out of all their troubles. The Lord is near to the brokenhearted and saves the crushed in spirit.<br><br>" +
+        "Isaiah 41:9-10 - I have chosen you and not cast you off; fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
+
+ "When Feeling Alone...": 
+        "Matthew 11:28-30 - Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.<br><br>" +
+        "Isaiah 40:31 - But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
+
+
+};
+
+
+        let currentQuestionIndex = 0;
+        let selectedEndings = new Set();
+
+        function displayQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = `
+                <div class="question">${questions[currentQuestionIndex].text}</div>
+                <label><input type="radio" name="answer" value="yes"> Yes</label>
+                <label><input type="radio" name="answer" value="no"> No</label>
+            `;
+        }
+
+        function nextQuestion() {
+            let answer = document.querySelector('input[name="answer"]:checked');
+            if (!answer) return;
+            
+            if (answer.value === "yes") {
+                questions[currentQuestionIndex].endings.forEach(e => selectedEndings.add(e));
+            }
+            
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("nextButton").style.display = "none";
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.style.display = "block";
+            
+            if (selectedEndings.size === 0) {
+                resultsDiv.innerHTML = "<p>No answers selected.</p>";
+            } else {
+                resultsDiv.innerHTML = "<h2>Your Results</h2>";
+                selectedEndings.forEach(e => {
+                    resultsDiv.innerHTML += `<p class="toggle" onclick="toggleDescription('${e}')">${e}</p>`;
+                    resultsDiv.innerHTML += `<div id="desc-${e}" class="description">${descriptions[e]}</div>`;
+                });
+            }
+    resultsDiv.innerHTML += `
+        <hr>
+        <p class="toggle" onclick="toggleTestimony()">Read My Testimony</p>
+        <div id="testimony" class="description" style="display: none;">
+            <p>Hi, thank you for taking my quiz! I hope you took something out of it, but if not that's okay too. To be completely honest, I was originally very skeptical about religion in general, (let alone Christianity) before I experienced something earlier this year 2025. For the first 15 years of my life I was an athiest, and was only recently questioning my beliefs about a higher power. I knew of Christianity, have read the Bible a few times, but never thought that its teachings would align with me and that I would become a believer. However, at my very lowest point in a hospital emergency room, I genuinely felt Jesus's presence like never before. He gave me a comfort that I never knew was POSSIBLE or EXISTED, and I truly got to know Him the past few months and my WHOLE perspective has changed. I hope that a small part of my testimony may plant a small seed within you to have deeper questions about Christianity and about the world. Thank you taking the time out of your day to read this! Message me if you have any questions. :)</p>
+        </div>
+    `;
+}
+
+// Function to toggle testimony visibility
+function toggleTestimony() {
+    let testimonyDiv = document.getElementById("testimony");
+    testimonyDiv.style.display = testimonyDiv.style.display === "none" ? "block" : "none";
+}
+        
+
+        function toggleDescription(id) {
+            let descDiv = document.getElementById("desc-" + id);
+            descDiv.style.display = descDiv.style.display === "none" ? "block" : "none";
+        }
+
+        displayQuestion();
+
+    </script>
+</body>
+</html>
+
